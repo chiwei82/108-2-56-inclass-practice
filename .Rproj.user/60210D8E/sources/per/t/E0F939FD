@@ -3,14 +3,14 @@
     "contents" : "",
     "created" : 1583417191385.000,
     "dirty" : false,
-    "encoding" : "",
+    "encoding" : "UTF-8",
     "folds" : "",
     "hash" : "0",
     "id" : "E0F939FD",
-    "lastKnownWriteTime" : 2314885436531816245,
-    "last_content_update" : 1583417191385,
-    "path" : null,
-    "project_path" : null,
+    "lastKnownWriteTime" : 1583907141,
+    "last_content_update" : 1583907141570,
+    "path" : "~/GitHub/108-2-56-inclass-practice/1.3_test",
+    "project_path" : "1.3_test",
     "properties" : {
         "tempName" : "Untitled1"
     },
@@ -20,5 +20,5 @@
     "relative_order" : 1,
     "source_on_save" : false,
     "source_window" : "",
-    "type" : "r_source"
+    "type" : "text"
 }
