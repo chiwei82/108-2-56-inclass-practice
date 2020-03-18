@@ -9,19 +9,47 @@ int main (void)
   long credit;
   int n=0; // sum the second-to-last digit
   credit=get_long("Number: ");
-
   long P=credit;
   long Q=credit;
 
-  for (long i=10 ; i<(10^17); i=i*10)
+  for ( int i=0 ; i<9 ; i++ )
   {
-    n= n+(P%i)*2;
-    P=(P/(i*10));
-  }
-  
-  
-  
-   
-   printf ("%i\n",n) ;
-}
+    long r = (P%10) ;
+    n=n+r;
+    P=(P/100);
+    printf("i:%i",i+1);
+    printf(" r:%li",r);
+    printf(" n:%i",n);
+    printf(" P:%li",P);
+    printf("\n");
+  }    
 
+  printf("\n");
+  Q=Q/10;
+  printf("Q:%li\n",Q);
+
+  for ( int i=0 ; i<9 ; i++ )
+  {
+    long s = (Q%10)*2 ;
+    if (s>10)
+    {
+      n=n+(s/10)+(s%10);
+      Q=(Q/100);
+    }
+    else
+    {
+      n=n+s;
+      Q=(Q/100);
+    }
+    printf("i:%i",i+1);
+    printf(" s:%li",s);
+    printf(" n:%i",n);
+    printf(" Q:%li",Q);
+    printf("\n");
+  }
+  if(n%10 ==0)
+  {
+      
+  }
+  printf("n:%i\n",n);
+}
