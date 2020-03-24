@@ -94,5 +94,5 @@ library(googlesheets4)
 ss <- as_sheets_id(`出席狀況表單網址`)
 homework_sheet <- sheets_read(ss,sheet=1)
 ```
-
+## 
 
