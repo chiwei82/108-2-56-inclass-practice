@@ -1,0 +1,6 @@
+"0","vNum1 <- c(-1,5)"
+"0","vNum2 <- c(2,3)"
+"0","vNum4 <- c() # 空向量"
+"0",""
+"0","vNum3 <- c(vNum2, vNum1)"
+"0","vNum4 <- c(vNum4, vNum1) # 向量疊代 （recursive vector concatenate）"
