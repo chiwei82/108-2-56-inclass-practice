@@ -55,6 +55,14 @@ dialogue <- c("小明說：'明天不用上課。'",
 
 cat(dialogue, sep="\n")
 ```
+
+```{r}
+library(httr)
+library(dplyr)
+GET("https://api.github.com/repos/chiwei82/108-2-56-inclass-practice/commits") %>%
+  content() %>%
+  View()
+```
 ## cat -> Concatenate and Print
 Description : Outputs the objects, concatenating the representations. cat performs much less conversion than print.
 to see more, move the cursor to cat then +F1
@@ -76,6 +84,13 @@ typeof(char)
 typeof(logi)
 ```
 
+```{r}
+library(googlesheets4)
+`出席狀況表單網址` <- "https://docs.google.com/spreadsheets/d/1EAG49qDKPWWi0ebkVr29TLrvVnoBPfkvxYY-J3xLAHY/edit#gid=458686645" # 缺乏定義值
+ss <- as_sheets_id(`出席狀況表單網址`)
+homework_sheet <- sheets_read(ss,sheet=1)
+
+```
 
 
 

@@ -6,10 +6,6 @@ output: html_document
 ---
 ## YAML語法的namevalue pair寫法為name: value，要注意:（為半形分號）的後面「一定要有一個空格」。
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ## 賦予物件資訊的方式
 ObjectName <- object_value 或是 object_value -> ObjectName
 
@@ -20,19 +16,6 @@ Ctrl+Enter -> 某一行, 遊標放該行任意處
 ##常見命名方式：
 snake: my_total_credits <- 15
 camel: myTotalCredits <- 15
-
-```{r}
-my_108_total_credits <- 15
-_108_total_credits <- 15
-108_total_credits <- 15
-_my_108_total_credits <- 15
-my.108.total_credits <- 15
-.108.total_credits <- 15 # 隱藏變數
-.my.108.total_credits <- 15
-我的108學年總學分數 <- 15
-`我的108學年總學分數` <- 15 # 特殊名稱處理，`不是名稱的一部份
-`.108.total_credits` <- 15
-```
 
 ##以c(...)將「相同類型」值以「逗點」分隔而形成的向量：
 ```{r}
@@ -62,7 +45,7 @@ num2<-5L # 整數
 num1Vector<-c(5,6,7)
 num2Vector<-c(5L,6L,7L)
 
-tyoeof(num1Vector)
+typeof(num1Vector)
 typeof(num2Vector)
 ```
 
@@ -71,6 +54,14 @@ dialogue <- c("小明說：'明天不用上課。'",
                "小花說：'真的嗎？'")
 
 cat(dialogue, sep="\n")
+```
+
+```{r}
+library(httr)
+library(dplyr)
+GET("https://api.github.com/repos/chiwei82/108-2-56-inclass-practice/commits") %>%
+  content() %>%
+  View()
 ```
 ## cat -> Concatenate and Print
 Description : Outputs the objects, concatenating the representations. cat performs much less conversion than print.
@@ -92,3 +83,14 @@ typeof(int)
 typeof(char)
 typeof(logi)
 ```
+
+```{r}
+library(googlesheets4)
+`出席狀況表單網址` <- "https://docs.google.com/spreadsheets/d/1EAG49qDKPWWi0ebkVr29TLrvVnoBPfkvxYY-J3xLAHY/edit#gid=458686645" # 缺乏定義值
+ss <- as_sheets_id(`出席狀況表單網址`)
+homework_sheet <- sheets_read(ss,sheet=1)
+
+```
+
+
+
