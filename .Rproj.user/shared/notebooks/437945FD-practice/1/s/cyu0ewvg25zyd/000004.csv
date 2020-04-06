@@ -1,0 +1,12 @@
+"0","library(googlesheets4)"
+"0","`出席狀況表` <-"" https://docs.google.com/spreadsheets/d/1EAG49qDKPWWi0ebkVr29TLrvVnoBPfkvxYY-J3xLAHY/edit#gid=458686645 ""  "
+"0","ss <- as_sheets_id(`出席狀況表`)"
+"0","homework_sheet <- sheets_read(ss,sheet=1)"
+"2","Reading from '108-2-56�\u0080<e5>��席�<8b>\u0080�<81>'
+"
+"2","Range ""'2020-03-11-56�\u0080'""
+"
+"2","錯誤: Client error: (400) INVALID_ARGUMENT
+  * Client specified an invalid argument. Check error message and error details for more information.
+  * Unable to parse range: '2020-03-11-56<e8>'
+"

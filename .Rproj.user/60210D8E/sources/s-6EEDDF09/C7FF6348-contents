@@ -1,0 +1,16 @@
+---
+title: "practice"
+author: "chiwei"
+date: "2020/4/1"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(googlesheets4)
+`出席狀況表` <-" https://docs.google.com/spreadsheets/d/1EAG49qDKPWWi0ebkVr29TLrvVnoBPfkvxYY-J3xLAHY/edit#gid=458686645 "  
+ss <- as_sheets_id(`出席狀況表`)
+homework_sheet <- sheets_read(ss,sheet=1)
+```
