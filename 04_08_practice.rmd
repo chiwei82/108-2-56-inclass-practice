@@ -1,0 +1,110 @@
+---
+title: "4/8_class_practice"
+author: "chiwei82"
+date: "2020/4/14"
+output: html_document
+---
+
+# 選取元素 grab am element, 
+# 1. 用位置選：object_name[[i]]
+# 2. 用名字選 $.
+
+```{r}
+vectorExample <- c("小明","小英","大雄")
+
+# 有多少位置可選：
+length(vectorExample)
+```
+
+```{r}
+listExample <- 
+  list(
+    student="小明",
+    `學期`=list(
+      `108-1`=list(
+        list(
+          name="個體經濟學",
+          teacher="Alice",
+          grade=85
+        )
+      ),
+      `108-2`=list(
+        list(
+          name="總體經濟學",
+          teacher="Mark",
+          grade=78
+        )
+      )
+    )
+  )
+# 有多少位置可選：
+length(listExample)
+```
+
+```{r}
+library(jsonlite)
+fromJSON("https://data.tainan.gov.tw/dataset/4cd9345a-04bf-4328-a97d-314ff78b4763/resource/afc025fc-1ef4-447c-b785-a680391d0ca1/download/tnsport2.json", simplifyDataFrame = F) -> tainanSportsMap
+
+```
+
+```{r}
+# 有多少名字可選：
+names(listExample)
+```
+
+```{r}
+listExample$student
+listExample$`學期` # 特殊命名依然要用反頓點呼叫
+
+```
+
+
+```{r}
+listExample[["student"]] # 中括號裡要放變數名稱
+listExample$student
+
+listExample[["學期"]] # 小心不是反頓點喔。
+listExample$`學期`
+
+student = "student"
+
+listExample[[student]] #沒用雙引號, 是在呼叫物件
+```
+
+```{r}
+fromJSON("http://data.ntpc.gov.tw/api/v1/rest/datastore/382000000A-000157-002",
+         simplifyDataFrame = F) -> newTaipeiCityVaccine
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
