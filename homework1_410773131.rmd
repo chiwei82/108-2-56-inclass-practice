@@ -55,8 +55,8 @@ oslo_time <- "18.11.2018 15:33:02"
 
 ```{r ans22}
 two_times = c( 
-  taiwan_time = ymd_hms(taiwan_time) ,
-  oslo_time = dmy_hms(oslo_time)
+  taiwan_time = ymd_hms(taiwan_time, tz = "Asia/Taipei") ,
+  oslo_time = dmy_hms(oslo_time , tz = "Europe/Oslo")
   )
 
 two_times
@@ -67,9 +67,10 @@ two_times
 
 ```{r ans23}
 
-two_times_chicago = with_tz(two_times, tz = "America/Chicago")
+two_times_chicago = with_tz(two_times, tzone  = "America/Chicago")
 
 two_times_chicago
+
 ```
 
 ## 3 List

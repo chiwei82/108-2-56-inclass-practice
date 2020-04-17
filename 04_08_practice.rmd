@@ -7,7 +7,7 @@ output: html_document
 
 # 選取元素 grab am element, 
 # 1. 用位置選：object_name[[i]]
-# 2. 用名字選 $.
+# 2. 用名字選 $. or [[ "object_name" ]]
 
 ```{r}
 vectorExample <- c("小明","小英","大雄")
