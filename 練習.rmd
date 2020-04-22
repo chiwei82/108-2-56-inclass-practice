@@ -29,3 +29,23 @@ sum_fiveReceipts = sum(as.integer(fiveReceipts))
 sum_fiveReceipts
 
 ```
+
+```{r}
+# 10位學生的主系
+majors10_char <- c('經濟學系','社會學系','社會學系','經濟學系','經濟學系','社會學系','經濟學系','經濟學系','經濟學系','社會學系')
+
+typeof(majors10_char)
+class(majors10_char)
+
+majors10_factor <- factor(majors10_char)
+
+typeof(majors10_factor)
+class(majors10_factor)
+```
+
+```{r}
+char3 <- c("小明","1","3")
+as.integer(char3)
+
+```
+
