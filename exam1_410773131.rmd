@@ -46,8 +46,6 @@ print(numerals_Gujarati)
 
 numerals_Gujarati = factor(numerals_Gujarati)
 receipts300 = factor(receipts300)
-
-
 ```
 請求出這300張收據的總杯數並存在sum300這個答案物件：
 ```{r ans1}
@@ -55,7 +53,6 @@ receipts300 = factor(receipts300)
 sum300 = sum ( as.numeric(receipts300))
 
 sum300
-
 ```
 
 ## 2 宋代詩詞
@@ -79,7 +76,7 @@ for (i in c(1:135)) {
 }
 poem_song = poem_song_1
 
-poem_song[[22]][[2]]
+poem_song
 ```
 
 ### 2.2 增加元素
