@@ -53,6 +53,9 @@ receipts300 = factor(receipts300)
 sum300 = sum ( as.numeric(receipts300))
 
 sum300
+class(sum300
+      )
+#false
 ```
 
 ## 2 宋代詩詞
@@ -69,14 +72,15 @@ read.csv("https://www.dropbox.com/s/oyzvb3d05igb05e/poem_songOrder.csv?dl=1")$x 
 原本poem_song的資料順序亂了，相同作者的作品沒有形成緊連的順序，好險正確順序記錄在poem_songOrder裡。poem_songOrder第i個元素值（假設為k）代表poem_song第i個元素值應該要放poem_song第k個元素值才對，依此類推。請將poem_song調成正確排序。
 
 ```{r ans21}
-poem_song_1 = poem_song
+poem_song_1 = poem_song #先複製一個一樣的變數, 作為被調整的對象
 
 for (i in c(1:135)) {
-  poem_song_1 [[ poem_songOrder[[i]] ]] <- poem_song [[i]]
-}
-poem_song = poem_song_1
+  poem_song_1 [[ poem_songOrder[[i]] ]]-> poem_song [[i]]
+} #將poem_song第i個元素值覆蓋到poem_song_1的第K個元素
+a <- 2
 
-poem_song
+#false
+#poem_song
 ```
 
 ### 2.2 增加元素
@@ -84,6 +88,9 @@ poem_song
 ```{r ans22}
 poem_song[[136]] = poem_new
 
+#未注意資料結構!!
+
+#false
 poem_song
 ```
 
@@ -97,7 +104,10 @@ poem_song第22首詩的原文應為：
 ```{r ans23}
 poem_song[[22]][[2]]="斗柄仙城曉，龍鱗下隰通。 三竿眺羲馭，十里過商中。 水藉天容碧，塵依驛轍紅。 喜聞何力語，應爲樂秋豐。"
 
-poem_song
+#未注意資料結構
+
+#false
+#poem_song
 ```
 ## 3 Dcard
 
@@ -155,6 +165,7 @@ post[[5]][[2]][[26]] = ymd_hm("2020-4-25 3:50",tz = "Asia/Taipei")
 post[[5]][[3]][[26]] = "心不在課堂上，在哪都做得到遠距。"
 post[[5]][[4]][[26]] = 0
 
+#false
 post
 ```
 
@@ -182,7 +193,7 @@ post[["category"]] = post_4_1
 post[["dateTime"]] = post_4_2
 post[["comments"]] = post_5
 
-
+#false
 post
 ```
 

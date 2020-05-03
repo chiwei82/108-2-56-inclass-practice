@@ -2,8 +2,8 @@
 title: "第一次期中考"
 output: html_document
 params:
-  studentName: "馮紀維"
-  studentID: "410773131"
+  studentName: "你的名字"
+  studentID: "你的學號"
 ---
 
 # 注意事項
@@ -43,17 +43,16 @@ print(receipts300[1:30]) # 印前30張
 每張收據杯數均在1-9，Gujarati語的1-9則分別如numerals_Gujarati第1到第9元素值所示：
 ```{r}
 print(numerals_Gujarati)
-
-numerals_Gujarati = factor(numerals_Gujarati)
-receipts300 = factor(receipts300)
-
 ```
 請求出這300張收據的總杯數並存在sum300這個答案物件：
 ```{r ans1}
+factor_receipts300 <- factor(receipts300, levels=numerals_Gujarati)
+# 此題其實不用設levels，Gujarati語的字碼排序剛好和它的1-9相同（只要同學有將receipts300轉成factor細心點就會注意到, 所以也可以：
+factor_receipts300 <- factor(receipts300)
 
-sum300 = sum ( as.numeric(receipts300))
+sum300 <- sum(as.integer(factor_receipts300))
 
-sum300
+# sum300
 ```
 
 ## 2 宋代詩詞
@@ -70,10 +69,7 @@ read.csv("https://www.dropbox.com/s/oyzvb3d05igb05e/poem_songOrder.csv?dl=1")$x 
 原本poem_song的資料順序亂了，相同作者的作品沒有形成緊連的順序，好險正確順序記錄在poem_songOrder裡。poem_songOrder第i個元素值（假設為k）代表poem_song第i個元素值應該要放poem_song第k個元素值才對，依此類推。請將poem_song調成正確排序。
 
 ```{r ans21}
-
-for (i in 135) {
-  poem_song [[i]] = poem_song[[ poem_songOrder[i] ]]
-} #不會寫:)
+poem_song[poem_songOrder] -> poem_song
 
 # poem_song
 ```
@@ -81,9 +77,15 @@ for (i in 135) {
 ### 2.2 增加元素
 請將poem_new的內容新增到poem_song的最後，但維持和poem_song其他元素一樣的元素名稱及結構。
 ```{r ans22}
-poem_song[[136]] = poem_new
+poem_song[[136]] <- 
+  list(
+    author=poem_new$`作者`,
+    paragraphs=poem_new$`詩文`,
+    title=poem_new$`主題`,
+    id=poem_new$id
+  )
 
-poem_song
+# poem_song
 ```
 
 
@@ -94,9 +96,9 @@ poem_song第22首詩的原文應為：
 
 然而當時助理一邊瀏覽百貨公司週年慶消息一邊打字而產生錯誤，請修正它。(第22首詩的位置不受2.1題排序改變影響，請放心作答)
 ```{r ans23}
-poem_song[[22]][[2]]="斗柄仙城曉，龍鱗下隰通。 三竿眺羲馭，十里過商中。 水藉天容碧，塵依驛轍紅。 喜聞何力語，應爲樂秋豐。"
+poem_song[[22]]$paragraphs[[4]] <- "喜聞何力語，應爲樂秋豐。"
 
-poem_song
+# poem_song
 ```
 ## 3 Dcard
 
@@ -118,9 +120,10 @@ source("https://www.dropbox.com/s/6pzodo4967mc9g4/dcardPost.R?dl=1")
 ```
 post來自https://www.dcard.tw/f/ntpu/p/233512569 ，請將回文資訊（comments）裡的gender, hearts轉成合理的class
 ```{r ans32}
-post[[5]][[4]] = as.numeric(post[[5]][[4]])
+as.factor(post$comments$gender) -> post$comments$gender
+as.integer(post$comments$hearts) -> post$comments$hearts
 
-post
+# post
 ```
 
 ### 3.3 DateTime
@@ -132,10 +135,10 @@ paste0(a,b)
 ```
 請將回文資訊裡的DateTime轉成合理的POSIXct/POSITt class，注意dcard顯示的都是台灣的時間。
 ```{r ans33}
-post[[5]][[2]] = paste0("2020-",post[[5]][[2]])
-post[[5]][[2]] = ymd_hm(post[[5]][[2]],tz = "Asia/Taipei")
+paste0("2020年",post$comments$DateTime) -> datetime
+ymd_hm(datetime, tz="Asia/Taipei") -> post$comments$DateTime
 
-post
+# post
 ```
 
 ### 3.4 DateTime
@@ -145,13 +148,12 @@ post
 
 此則文章是波蘭華沙（Poland, Warsaw）時間4月25日下午3點50分發的。請依照comments裡的25則記錄方式加上這第26則，hearts數字填0，要注意時間格式要與前25則相同以台灣時間顯示。
 ```{r ans34}
+post$comments$gender[[26]] <- "男"
+post$comments$DateTime[[26]] <- with_tz(ymd_hm("2020-04-25 15:50",tz="Europe/Warsaw"),tzone="Asia/Taipei")
+post$comments$content[[26]] <- "心不在課堂上，在哪都做得到遠距。"
+post$comments$hearts[[26]] <- 0L
 
-post[[5]][[1]][[26]] = "男"
-post[[5]][[2]][[26]] = ymd_hm("2020-4-25 3:50",tz = "Asia/Taipei")  
-post[[5]][[3]][[26]] = "心不在課堂上，在哪都做得到遠距。"
-post[[5]][[4]][[26]] = 0
-
-post
+# post
 ```
 
 
@@ -169,18 +171,12 @@ List of 6
 此題答案元素名稱出現順序也要對。
 
 ```{r ans35}
-post_5 = post[[5]]
-post_4_1 = post[[4]][[1]] 
-post_4_2 = post[[4]][[2]]
-post = post[-c(4,5)]
+post$category <- post$category_dateTime[[1]]
+post$dateTime <- ymd_hm(paste0("2020年",post$category_dateTime[[2]]),tz="Asia/Taipei")
+post$category_dateTime <- NULL
+post[c(1,2,3,5,6,4)] -> post
 
-post_4_1
-post_4_2
-post[["category"]] = post_4_1
-post[["dateTime"]] = post_4_2
-post[["comments"]] = post_5
-
-post
+# post
 ```
 
 
