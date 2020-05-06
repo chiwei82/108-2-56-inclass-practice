@@ -50,6 +50,7 @@ violatedArticles
 ```{r ans12}
 
 table_countsByArticle = table( badEmployers [[4]] )
+
 names(table_countsByArticle)
 class(table_countsByArticle)
 
@@ -156,7 +157,7 @@ chinese
 請取出10位學生中志願為北大的學生名字並存到名為ntpu_namelist的答案物件(class為chr):
 ```{r ans22}
 
-ntpu_namelist= (students10[[1]][stringr::str_detect(students10[["志願"]],"北大") == T])
+ntpu_namelist = (students10[[1]][stringr::str_detect(students10[["志願"]],"北大") == T])
 
 ntpu_namelist
 ```
@@ -182,8 +183,11 @@ verfied = students10[["姓名"]] %in%`經濟志願`
 scam1 = students10[["國文"]][verfied == T]>=12
 scam2 = ( students10[["英文"]] [verfied == T] + students10[["數學"]] [verfied == T] ) >=26
 
-ntpu_econtpu_eco = `經濟志願`[scam1 == T][scam2 == T] 
+ntpu_econtpu_eco = `經濟志願`[scam1 == T][scam2 == T]
+
 ntpu_econtpu_eco = as.character(ntpu_econtpu_eco)
+
+ntpu_econtpu_eco = ntpu_econtpu_eco [ ntpu_econtpu_eco %in% "NULL" == F ]
 
 ntpu_econtpu_eco
 ```
@@ -198,10 +202,8 @@ ntpu_econtpu_eco
 ```{r ans24}
 
 congrats_list = ntpu_econtpu_eco[(ntpu_econtpu_eco %in% namelist) == T]
-congrats = paste0( "恭喜" , congrats_list )
-congrats = paste0( congrats,"同學錄取國立臺北大學經濟系" )
-
+congrats = paste0( "恭喜 " , congrats_list )
+congrats = paste0( congrats," 同學錄取國立臺北大學經濟系" )
 
 congrats
-# congrats
 ```
