@@ -156,5 +156,17 @@ str_view_all(headline, "陳[^官]") # 固定字元＋有1個strip： 出象為�
 str_count(headline, "陳[^官]")
 ```
 
+```{r}
+addresses <- c(
+  '臺中市后里區公館里尾社路385號',
+  '新竹市東區科學園路125號1樓'
+  )
+
+strip1 <- strip2 <- strip3 <- "[0-9]"
+strip4 <- "號"
+myRegexSlotMachine <- paste0(strip1,strip2,strip3,strip4)
+print(myRegexSlotMachine)
+str_extract(addresses,myRegexSlotMachine)
+```
 
 
