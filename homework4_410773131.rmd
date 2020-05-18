@@ -46,7 +46,7 @@ back_regex
 ```{r}
 pattern <- paste0("段(兄|兄弟)",back_regex)
 str_extract_all(twoNames, pattern)
-
+str_view(twoNames, pattern)
 ```
 
 ## 2. 天龍八部

@@ -2,8 +2,8 @@
 title: "homework 3"
 output: html_document
 params:
-  studentName: "馮紀維"
-  studentID: "410773131"
+  studentName: "你的名字"
+  studentID: "你的學號"
 ---
 
 # 注意事項
@@ -34,11 +34,12 @@ library(jsonlite); library(lubridate); library(readr); library(stringr)
 fromJSON("https://data.ntpc.gov.tw/od/data/api/CB6C96C8-D514-42EA-8591-0F4447E79C91?$format=json") -> badEmployers
 ```
 
+
 ### 1.1 違反法條種類
 針對law元素，列出裡面出現過的條款（不重覆陳列）存在violatedArticles (class character)：
 ```{r ans11}
-
-violatedArticles = as.character(levels(factor(badEmployers[[4]])))
+factor(badEmployers$law)-> badEmployers$law
+levels(badEmployers$law)-> violatedArticles
 
 violatedArticles
 ```
@@ -46,23 +47,18 @@ violatedArticles
 ### 1.2 各項法條違反者數目
 使用table()函數呈現出每個條款的違法廠商數目，存在table_countsByArticle (class table), 正確答案在執行names(table_countsByArticle)時會出現前一題的所有條款。
 ```{r ans12}
-
-table_countsByArticle = table( badEmployers [[4]] )
+table(badEmployers$law) -> table_countsByArticle
 
 table_countsByArticle
 ```
 
 ### 1.3 違反數最多的法條
-自1.2題的table_countsByAricle找出最多廠商違反的條款名稱及數目，即透過「要/不要」向量選出違反數最高的項目；結果存在mostViolatedArticle（class table）。正確答案下，names(mostViolatedArticle)會呈現該條款，而as.integer(mostViolatedArticle)會呈現違法廠商數目。
+自1.2題的table_countsByAricle找出最多廠商違反的條款名稱及數目，即透過「要/不要」向量選出違反數最高的項目；mostViolatedArticle（class integer）。正確答案下，names(mostViolatedArticle)會呈現該條款，而as.integer(mostViolatedArticle)會呈現違法廠商數目。
 
 提示：table class物件為integer type，可對它取max()得到最大值。
-
 ```{r ans13}
-
-pick_max_article = table_countsByArticle[ (table_countsByArticle == max(table_countsByArticle))==T ]
-
-mostViolatedArticle = pick_max_article
-mostViolatedArticle = as.table(mostViolatedArticle)
+pick_mostViolatedAct <- table_countsByArticle == max(table_countsByArticle)
+table_countsByArticle[pick_mostViolatedAct] -> mostViolatedArticle
 
 mostViolatedArticle
 ```
@@ -70,38 +66,28 @@ mostViolatedArticle
 ### 1.4 最常違反法條之內容
 找出最常違反條款的法條內容（可參見lawContent這個元素），並將此內容存在mostViolatedArticle_content (class character, length=1)
 ```{r ans14}
-
-table_countsBylawcontent = table( badEmployers[[5]] )
-
-pick_max_content = table_countsByArticle [ (table_countsBylawcontent == max(table_countsBylawcontent))==T ]
-
-mostViolatedArticle_content = pick_max_content
-mostViolatedArticle_content = as.character(names(mostViolatedArticle_content))
-
+pick_act32_2_violators <- 
+  badEmployers$law == names(mostViolatedArticle)
+badEmployers$lawContent[pick_act32_2_violators][[1]] -> mostViolatedArticle_content 
+pick_act32_2_violators 
 mostViolatedArticle_content
 ```
 
 ### 1.5 處份日期最常落在幾月
 找出處份日期最常出現的月份並存在popularSentenceMonth（class character, length=1）：
 ```{r ans15}
-
-count_month = list(`1` = min(table(stringr::str_detect(badEmployers[["dt"]],"/01/"))),
-`2`= min(table(stringr::str_detect(badEmployers[["dt"]],"/02/"))),
-`3`= min(table(stringr::str_detect(badEmployers[["dt"]],"/03/"))),
-`4`= min(table(stringr::str_detect(badEmployers[["dt"]],"/04/"))),
-`5`= min(table(stringr::str_detect(badEmployers[["dt"]],"/05/"))),
-`6`= min(table(stringr::str_detect(badEmployers[["dt"]],"/06/"))),
-`7` = min(table(stringr::str_detect(badEmployers[["dt"]],"/07/"))),
-`8`= min(table(stringr::str_detect(badEmployers[["dt"]],"/08/"))),
-`9`= min(table(stringr::str_detect(badEmployers[["dt"]],"/09/"))),
-`10`= min(table(stringr::str_detect(badEmployers[["dt"]],"/10/"))),
-`11`= min(table(stringr::str_detect(badEmployers[["dt"]],"/11/"))),
-`12`= min(table(stringr::str_detect(badEmployers[["dt"]],"/12/"))))
-
-popularSentenceMonth = names(count_month[count_month == max(as.integer(count_month ))])
+ymd(badEmployers$dt) -> badEmployers$dt
+month(badEmployers$dt) -> sentenceMonths
+table(sentenceMonths) -> table_sentenceMonths
+pick_highestMonth <- 
+  table_sentenceMonths == max(table_sentenceMonths)
+names(table_sentenceMonths[pick_highestMonth]) -> 
+  popularSentenceMonth
 
 popularSentenceMonth
 ```
+
+
 
 ## 2 個人申請
 以下資料為某年度學測五科分數對照表(table)、北大經濟虛擬榜單(namelist)以及喵喵高中3年1班10位同學的個人申請資料(students10)：
@@ -125,8 +111,8 @@ source("https://www.dropbox.com/s/5oy56om4q0857tt/student10.R?dl=1",encoding = "
 小知識:
 factor是從1開始的整數，沒有0喔。
 ```{r ans21}
-
-chinese = ordered(table[[2]])
+factor(table$國文,levels=table$國文[c(16:1)],ordered=T) ->
+  chinese
 
 chinese
 ```
@@ -134,8 +120,8 @@ chinese
 ### 2.2 str_detect()
 請取出10位學生中志願為北大的學生名字並存到名為ntpu_namelist的答案物件(class為chr):
 ```{r ans22}
-
-ntpu_namelist = (students10[[1]][stringr::str_detect(students10[["志願"]],"北大") == T])
+pick_ntpu <- str_detect(as.character(students10$志願),"北大")
+students10$姓名[pick_ntpu] -> ntpu_namelist
 
 ntpu_namelist
 ```
@@ -152,20 +138,12 @@ ntpu_namelist
 志願沒有填北大經濟的人可以進一階篩選嗎?
 logical儲存的本質是甚麼?
 ```{r ans23}
-
-`經濟志願`=(students10[[1]][stringr::str_detect(students10[["志願"]],"北大經濟") == T])
-`經濟志願` = as.list(`經濟志願`)
-
-verfied = students10[["姓名"]] %in%`經濟志願`
-
-scam1 = students10[["國文"]][verfied == T]>=12
-scam2 = ( students10[["英文"]] [verfied == T] + students10[["數學"]] [verfied == T] ) >=26
-
-ntpu_econtpu_eco = `經濟志願`[scam1 == T][scam2 == T]
-
-ntpu_econtpu_eco = as.character(ntpu_econtpu_eco)
-
-ntpu_econtpu_eco = ntpu_econtpu_eco [ ntpu_econtpu_eco %in% "NULL" == F ]
+c(as.character(students10$志願) == "北大經濟") -> pick_eco
+c(students10$國文 >= 12) -> pick_chineseFit
+c(students10$英文+students10$數學 >= 26) -> pick_mathEngFit
+pick_pass1stLevel <- as.logical(pick_eco*pick_chineseFit*pick_mathEngFit)
+students10$姓名[pick_pass1stLevel] ->
+  ntpu_econtpu_eco
 
 ntpu_econtpu_eco
 ```
@@ -178,9 +156,10 @@ ntpu_econtpu_eco
 
 請將榜單文字儲存到名為congrats的答案物件(class為chr)。
 ```{r ans24}
-
-congrats_list = ntpu_econtpu_eco[(ntpu_econtpu_eco %in% namelist) == T]
-congrats = paste( "恭喜" , congrats_list,"同學錄取國立臺北大學經濟系",sep=" ")
+pick_admitted <- students10$姓名 %in% namelist
+students10$姓名[pick_admitted] -> congrats
+paste("恭喜",congrats,"同學錄取國立臺北大學經濟系",sep=" ") ->
+  congrats
 
 congrats
 ```
