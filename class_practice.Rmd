@@ -1,0 +1,26 @@
+---
+title: "practice"
+author: "chiwei82"
+date: "2020/5/19"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, eval=F)
+library(jsonlite); library(lubridate); library(readr); library(stringr); 
+```
+
+```{r}
+jsonlite::fromJSON("https://data.ntpc.gov.tw/od/data/api/EDC3AD26-8AE7-4916-A00B-BC6048D19BF8?$format=json") ->
+  garbageRoutes
+```
+
+```{r ans1}
+class(garbageRoutes)
+str(garbageRoutes)
+
+garbageRoutes[["route"]] = str_extract (garbageRoutes$linename, "[:alnum:]+路線")
+```
+

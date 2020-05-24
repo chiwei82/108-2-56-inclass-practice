@@ -4,6 +4,8 @@ output: html_document
 params:
   studentName: "你的名字"
   studentID: "你的學號"
+editor_options: 
+  chunk_output_type: console
 ---
 
 # 注意事項
@@ -48,7 +50,7 @@ print(numerals_Gujarati)
 ```{r ans1}
 factor_receipts300 <- factor(receipts300, levels=numerals_Gujarati)
 # 此題其實不用設levels，Gujarati語的字碼排序剛好和它的1-9相同（只要同學有將receipts300轉成factor細心點就會注意到, 所以也可以：
-factor_receipts300 <- factor(receipts300)
+factor_receipts300 <- factor(receipts300,levels = numerals_Gujarati,ordered = T)
 
 sum300 <- sum(as.integer(factor_receipts300))
 

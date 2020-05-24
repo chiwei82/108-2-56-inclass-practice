@@ -61,7 +61,7 @@ studentHeights
 ```{r ans12}
 `年齡層類別` = c("6-8", "9-12", "13-15")
 
-studentHeights[["年齡層"]] = factor(studentHeights[["年齡層"]], `年齡層類別`  )
+studentHeights[["年齡層"]] = factor(studentHeights[["年齡層"]], `年齡層類別`,ordered = T  )
 
 levels(studentHeights[["年齡層"]])
 
@@ -98,8 +98,8 @@ averageHeightByGroup = meanofall
 averageHeightByGroup
 ```
 
-### 1.4 性別差異
-請創造一個named numeric vector, genderDifferenceByAge (class numeric, length=3) 其值分別是三組年齡層各自所包含年齡下的「男性平均」減去「女性平均」（即第一個值是所有6-8歲不分學年度的男女平均差異，再來是9-12歲，最後是13-15歲），而此vector的元素名稱也分別是"6-8", "9-12", "13-15" (hint: 數值向量x元素平均, 可用mean(x)求得)
+### 1.4 各年齡層下性別身高差異
+請創造一個named numeric vector, heightDifferenceByGroup (class numeric, length=3) 其值分別是三組年齡層各自所包含年齡下的「男性平均身高」減去「女性平均身高」（即第一個值是所有6-8歲不分學年度的男女身高平均差異，再來是9-12歲，最後是13-15歲），而此vector的元素名稱也分別是"6-8", "9-12", "13-15" (hint: 數值向量x元素平均, 可用mean(x)求得)
 
 ```{r ans14}
 
@@ -151,7 +151,7 @@ jsonlite::fromJSON("https://www.dropbox.com/s/bp0w8tjgrhi79x7/sameMajorDifferent
 請寫下「一個」字串的regex字串向量，稱之為realEstateRegex （class character, length=1）
 ```{r ans21}
 
-realEstateRegex = "(不動)(產?與?城?鄉?環?境?)(學?)(系?)"
+realEstateRegex = "(不動)(產?與?城?鄉?環?境?)(學?)系"
 
 realEstateRegex
 ```
@@ -215,6 +215,8 @@ differentMajors =  str_replace(differentMajors,realEstateRegex,"不動系")
 
 table(differentMajors)
 
+differentMajors = factor(differentMajors)
+
 differentMajors
 ```
 
@@ -231,6 +233,20 @@ differentMajors
 即levels(school)會有「公共事務學院、商學院、社科院」。
 
 ```{r ans25}
-# school
+
+school = differentMajors
+school = factor(school)
+
+business_regex = "(休運系|金融系)"
+social_regex = "(經濟系|社會系|社工系)"
+public_regex = "(公行系|不動系)"
+
+levels(school) = str_replace(levels(school), business_regex , "商學院")
+
+levels(school) = str_replace(levels(school), social_regex , "社科院")
+
+levels(school) = str_replace(levels(school), public_regex , "公共事務學院")
+
+school
 ```
 

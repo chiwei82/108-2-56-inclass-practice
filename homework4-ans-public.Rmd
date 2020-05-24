@@ -2,8 +2,10 @@
 title: "homework 4"
 output: html_document
 params:
-  studentName: "馮紀維"
-  studentID: "410773131"
+  studentName: "你的名字"
+  studentID: "你的學號"
+editor_options: 
+  chunk_output_type: console
 ---
 
 # 注意事項
@@ -33,20 +35,17 @@ library(jsonlite); library(lubridate); library(readr); library(stringr);
 ```{r data1}
 twoNames <- "有人叫他段兄，但也有有人叫他段兄弟，最常...."
 str_extract_all(twoNames, "段(兄|兄弟)")
-
 ```
 請在小明的target regex後面加上「後面鄰居不能有弟」的regex描述並存在back_regex (class character) 裡. (hint: 查cheat sheet look around)
 ```{r ans1}
+back_regex <- "(?!弟)"
 
-back_regex = "(?!弟)"
-
-back_regex
+# back_regex
 ```
 若你的答案正確，執行以下程式會得到一個段兄，一個段兄弟。
 ```{r}
 pattern <- paste0("段(兄|兄弟)",back_regex)
 str_extract_all(twoNames, pattern)
-
 ```
 
 ## 2. 天龍八部
@@ -58,10 +57,9 @@ jsonlite::fromJSON("https://www.dropbox.com/s/kv0xa0spa6q5l7q/semiGodsSemiDevils
 ### 2.1
 取出回數為"P2"的內文存在context_picked (class character). 
 ```{r ans21}
-
-data = semiGodsSemiDevils["data"][[1]]
-section = data[[1]][[1]]
-context_picked = data[[1]][[2]][section == "P2"]
+semiGodsSemiDevils$data[[1]]$section -> sections
+pick_p2 <- sections == "P2"
+semiGodsSemiDevils$data[[1]]$text[pick_p2] -> context_picked
 
 context_picked
 ```
@@ -80,13 +78,9 @@ List of 1
 ```
 
 ```{r ans22}
+str_split(context_picked,"\\s{2}") -> context_picked_split
 
-pattern_1 = "\\s{2}"
-
-context_picked_split = str_split(context_picked, pattern_1)
-str(context_picked_split)
-
-context_picked_split
+# context_picked_split
 ```
 
 ### 2.3
@@ -94,20 +88,17 @@ context_picked_split
 
 可能有用的提示: 出現0或1次的複製次數是用?號接在文字的後面。
 
-```{r ans23} 
+```{r ans23}
+pattern <- "姓?段(譽|兄|兄弟|大哥|公子|相公|君|的小子)(?!弟)"
+str_extract_all(context_picked_split[[1]], pattern = pattern) ->  mention_duan
 
-pattern_2 = "(段(譽|兄|兄弟|大哥|相公|君)(?!弟)|姓段的小子)"
-
-mention_duan = str_extract_all(context_picked_split, pattern_2 )
-
-mention_duan
+# mention_duan
 ```
 
 ### 2.4
 使用`unlist()`函數將mention_duan轉成字串後用`table()`函數統計段譽各稱號被提到的次數，並將table結果存在table_duan (class table)。
 ```{r ans24}
-
-table_duan = table(unlist(mention_duan))
+table(unlist(mention_duan)) -> table_duan
 
 table_duan
 ```

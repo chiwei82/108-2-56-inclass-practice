@@ -1,0 +1,65 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(purrr)
+```
+
+```{r}
+example <- list(
+  name=c("小明","小花","小新","美美"),
+  height=c(175,166,170,160),
+  weight=c(77,NA,60,43),
+  birthday=lubridate::ymd(c("1998-03-11","1999-12-22","1995-08-22","2001-10-10")),
+  hobby=c("美食 旅遊","旅遊 時尚","3C 美食","音樂 旅遊"),
+  residence=c("Taipei","New Taipei","Taichung","Kaohsiung"),
+  allowance=factor(c("0-1000","1001-2000","2000+","1001-2000")),
+  bloodType=c("A","B","B","O")
+)
+```
+
+```{r}
+names(example)
+```
+
+```{r}
+`pick_小新` <- example$name == "小新"
+data_selected <- 
+  list(
+    name=example$name[`pick_小新`],
+    weight=example$weight[`pick_小新`],
+    height=example$height[`pick_小新`],
+    hobby=example$hobby[`pick_小新`],
+    residence=example$residence[`pick_小新`],
+    allowance=example$allowance[`pick_小新`],
+    bloodType=example$bloodType[`pick_小新`]
+  )
+```
+
+# .x對每個元素
+```{r}
+map(example, ~.x[pick_小新]) -> 
+  data_selected 
+  
+data_selected
+```
+
+```{r}
+jsonlite::fromJSON("https://www.dropbox.com/s/6252gbdnv9owljm/dance.json?dl=1", simplifyDataFrame = F) -> dance
+```
+
+# 拿出所有元素的title
+```{r}
+map(dance, ~.x[["title"]]) ->
+  list_titles
+
+View(list_titles) # V要大寫
+```
+
+```{r}
+
+```
+

@@ -4,6 +4,8 @@ output: html_document
 params:
   studentName: "馮紀維"
   studentID: "410773131"
+editor_options: 
+  chunk_output_type: console
 ---
 
 # 注意事項
@@ -98,7 +100,7 @@ context_picked_split
 
 pattern_2 = "(段(譽|兄|兄弟|大哥|相公|君)(?!弟)|姓段的小子)"
 
-mention_duan = str_extract_all(context_picked_split, pattern_2 )
+mention_duan = str_extract_all(context_picked_split[[1]], pattern_2 )
 
 mention_duan
 ```
@@ -111,5 +113,3 @@ table_duan = table(unlist(mention_duan))
 
 table_duan
 ```
-
-
