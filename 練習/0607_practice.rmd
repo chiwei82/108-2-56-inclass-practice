@@ -1,0 +1,110 @@
+---
+title: "practice6/7"
+author: "chiwei82"
+date: "2020/6/7"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+jsonlite::fromJSON("https://opendata.cwb.gov.tw/fileapi/v1/opendataapi/F-C0032-001?Authorization=rdec-key-123-45678-011121314&format=JSON") ->
+  weather_next36hours
+```
+
+```{r}
+dateInput <- lubridate::today()
+locationInput <- "新北市"
+```
+
+#SOP
+```{r}
+# 找出符合地點的天氣資訊：weatherAtLocation
+(weather_next36hours$cwbopendata$dataset$location$locationName == locationInput) -> pick_location # 可挑出locationInput的「要/不要」向量
+
+weather_next36hours$cwbopendata$dataset$location$weatherElement[pick_location][[1]] -> weatherAtLocation
+
+# 在weatherAtLocation找出符合時間的天氣資訊
+
+(weatherAtLocation$elementName=="MaxT") ->
+  pick_MaxT
+(weatherAtLocation$elementName=="MinT") ->
+  pick_MinT
+weatherAtLocation$time[pick_MaxT][[1]]$parameter$parameterName[[1]] -> maxT
+weatherAtLocation$time[pick_MinT][[1]]$parameter$parameterName[[1]] -> minT
+
+glue::glue("{locationInput} {dateInput} 氣溫，最高{maxT}度，最低{minT}度。")
+```
+
+```{r}
+askSilly_weather <- function(locationInput){
+  jsonlite::fromJSON("https://opendata.cwb.gov.tw/fileapi/v1/opendataapi/F-C0032-001?Authorization=rdec-key-123-45678-011121314&format=JSON") ->
+  weather_next36hours
+  
+  (weather_next36hours$cwbopendata$dataset$location$locationName == locationInput) -> pick_location
+  
+  weather_next36hours$cwbopendata$dataset$location$weatherElement[pick_location][[1]] -> weatherAtLocation
+  (weatherAtLocation$elementName=="MaxT") ->
+    pick_MaxT
+  (weatherAtLocation$elementName=="MinT") ->
+    pick_MinT
+  weatherAtLocation$time[pick_MaxT][[1]]$parameter$parameterName[[1]] -> maxT
+  weatherAtLocation$time[pick_MinT][[1]]$parameter$parameterName[[1]] -> minT
+  
+  glue::glue("{locationInput} {dateInput} 氣溫，最高{maxT}度，最低{minT}度。")
+}
+```
+
+```{r}
+askSilly_weather("臺中市")
+askSilly_weather("花蓮縣")
+```
+
+```{r}
+
+what_time_it_is = 
+  
+  function(someWhere){
+    
+    library(lubridate)
+    someWhere = as.character(someWhere)
+    
+    current_time_translated_in_someWhere = 
+      with_tz(now(),tzone = someWhere)
+    
+    return(current_time_translated_in_someWhere)
+  }
+
+what_time_it_is("Europe/Paris")
+```
+
+#concept
+function本身的運作並不能只靠它的定義值function(...){...}，
+還要有適當的環境（environment）條件才能生存。
+若物件的生存運作需要有適當的環境，
+表示電腦要存這個物件時還需要包含（enclose）它的（生存）環境一起存。
+這種儲存型態叫closure（閉包）。
+
+```{r}
+# 若函數執行需要Global environment已存在某些物件，查詢需要哪些物件
+codetools::findGlobals(demand_return)
+```
+#myDemand的運作需要global environment裡的intercept, slope物件。
+
+這表示沒有intercept, slope在global environment裡它無法運作。
+
+global environment裡的intercept, slope值若有改變，它的運作結果也會不同。(這種「要運作才去呼叫值」的特性叫Lazy evaluation，惰性求值)
+
+```{r}
+jsonlite::fromJSON("https://data.ntpc.gov.tw/api/datasets/07F7CCB3-ED00-43C4-966D-08E9DAB24E95/json/preview") -> busArrivalForecast # 公車預估到站時間 https://data.ntpc.gov.tw/datasets/07F7CCB3-ED00-43C4-966D-08E9DAB24E95
+
+jsonlite::fromJSON("https://data.ntpc.gov.tw/api/datasets/0EE4E6BF-CEE6-4EC8-8FE1-71F544015127/json/preview") -> busRoutes # 公車路線清單 https://data.ntpc.gov.tw/datasets/0EE4E6BF-CEE6-4EC8-8FE1-71F544015127
+
+jsonlite::fromJSON("https://data.ntpc.gov.tw/api/datasets/34B402A8-53D9-483D-9406-24A682C2D6DC/json/preview") -> busStopsInfo # 公車站位資訊 https://data.ntpc.gov.tw/datasets/34B402A8-53D9-483D-9406-24A682C2D6DC
+```
+
+
+
+
+
+
