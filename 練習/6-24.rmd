@@ -1,0 +1,362 @@
+---
+title: "6-24"
+author: "chiwei82"
+date: "2020/6/28"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+eggs <- rep("雞蛋x1", 8)
+
+fryEgg <- function(egg){
+  str_replace(egg, "雞蛋", "荷包蛋")
+}
+
+# external dispatch 1-3
+eggs[[1]] %>% fryEgg(.)
+eggs[[2]] %>% fryEgg(.)
+eggs[[3]] %>% fryEgg(.)
+
+map(eggs, ~fryEgg(.x)) -> friedEggs1
+
+# internal dispatch 1-3
+1 %>% {fryEgg(eggs[[.]])}
+2 %>% {fryEgg(eggs[[.]])}
+3 %>% {fryEgg(eggs[[.]])}
+
+map(1:8, ~{fryEgg(eggs[[.]])}) -> friedEggs2
+```
+
+```{r}
+grade <- c(45, 74, NA)
+
+i<-3
+
+grade_i <- grade[[i]]
+if(!is.na(grade_i)){
+  if(grade_i >= 60){
+    "P"
+  } else {
+    "F"
+  }
+} else {
+  "缺考"
+}
+```
+
+```{r}
+pass_or_fail <- function(grade_i){
+  if(!is.na(grade_i)){
+    if(grade_i >= 60){
+      "P"
+    } else if(grade_i < 60 ) {
+      "F"
+    }
+  } else {
+    "缺考"
+  }
+}
+
+pass_or_fail(grade[[1]])
+pass_or_fail(grade[[2]])
+pass_or_fail(grade[[3]])
+
+# 可否直接input整個grade vector
+warning("不是vectorised function")
+pass_or_fail(grade)
+```
+
+```{r}
+grade[[1]] %>% {pass_or_fail(.)}
+grade[[2]] %>% {pass_or_fail(.)}
+grade[[3]] %>% {pass_or_fail(.)}
+
+map(grade, ~{pass_or_fail(.)}) # map to list
+
+map_chr(grade, ~{pass_or_fail(.)}) # map to atom. vectof of class character # _可以設定要出來甚麼class
+
+map_pass_fail <- function(grade){
+  map_chr(grade, ~{pass_or_fail(.)})
+}
+```
+
+```{r}
+map_pass_fail(c(77,43,68,NA))
+
+#可以
+```
+
+```{r}
+eggs <- rep("雞蛋x1",10)
+ham <- rep("火腿x1", 10)
+toast <- rep("土司2片",10)
+
+toast_withEggHam <- function(toast=NULL, egg=NULL, ham=NULL){
+  if(is.null(toast) || !str_detect(toast, "土司")){stop("少了土司")}
+  if(is.null(egg) || !str_detect(egg, "蛋")){stop("少了蛋")}
+  if(is.null(ham) || !str_detect(ham, "火腿")){stop("少了火腿")}
+  "火腿蛋三明治"
+}
+
+# 土司、火腿、蛋 第一份出列
+1 %>% {toast_withEggHam(toast=toast[[.]], egg=eggs[[.]], ham=ham[[.]])}
+# 土司、火腿、蛋 第二份出列
+2 %>% {toast_withEggHam(toast=toast[[.]], egg=eggs[[.]], ham=ham[[.]])}
+# 土司、火腿、蛋 第三份出列
+3 %>% {toast_withEggHam(toast=toast[[.]], egg=eggs[[.]], ham=ham[[.]])}
+
+
+map(1:10,
+    ~toast_withEggHam(toast=toast[[.x]], egg=eggs[[.x]], ham=ham[[.x]]))
+```
+
+```{r}
+jsonlite::fromJSON("https://www.dropbox.com/s/7myzzdnoor21hye/courseStructure2.json?dl=1") -> courseStructure
+```
+
+```{r}
+
+# 100學年 1年級
+acadYear_i <- academicYears[[1]]
+grade_i <- allGrades[[1]]
+pick <-
+  (courseStructure$學年==acadYear_i 
+    &
+    str_detect(courseStructure$應修系級, grade_i))
+unique(courseStructure$科目名稱[pick])
+
+# 101學年 2年級
+acadYear_i <- academicYears[[2]]
+grade_i <- allGrades[[2]]
+pick <-
+  (courseStructure$學年==acadYear_i 
+    &
+    str_detect(courseStructure$應修系級, grade_i))
+unique(courseStructure$科目名稱[pick])
+
+# 102學年 3年級
+acadYear_i <- academicYears[[3]]
+grade_i <- allGrades[[3]]
+pick <-
+  (courseStructure$學年==acadYear_i 
+    &
+    str_detect(courseStructure$應修系級, grade_i))
+unique(courseStructure$科目名稱[pick])
+
+# 103學年 4年級
+acadYear_i <- academicYears[[4]]
+grade_i <- allGrades[[4]]
+pick <-
+  (courseStructure$學年==acadYear_i 
+    &
+    str_detect(courseStructure$應修系級, grade_i))
+unique(courseStructure$科目名稱[pick])
+```
+
+```{r}
+entranceYear <- 100
+major <- "經濟系"
+allGrades <- paste0(major, 1:4)
+academicYears <- entranceYear+0:3
+
+
+get_courses <- function(acadYear_i, grade_i, courseStructure){
+  pick <-
+  (courseStructure$學年==acadYear_i 
+    &
+    str_detect(courseStructure$應修系級, grade_i))
+  
+  return(
+    unique(courseStructure$科目名稱[pick])
+  )
+}
+
+1:4 %>%
+  map(~{get_courses(academicYears[[.]], allGrades[[.]], courseStructure)})
+```
+
+```{r}
+### 前置作業
+entranceYear <- 100
+major <- "經濟系"
+allGrades <- paste0(major, 1:4)
+academicYears <- entranceYear+0:3
+
+jsonlite::fromJSON("https://www.dropbox.com/s/7myzzdnoor21hye/courseStructure2.json?dl=1") -> courseStructure
+
+get_courses <- function(acadYear_i, grade_i, courseStructure){
+  pick <-
+  (courseStructure$學年==acadYear_i 
+    &
+    str_detect(courseStructure$應修系級, grade_i))
+  
+  return(
+    unique(courseStructure$科目名稱[pick])
+  )
+}
+```
+
+```{r}
+# 前置作業，接map iteration
+map(1:4, 
+    ~{
+      get_courses(academicYears[[.x]], 
+              allGrades[[.x]], 
+              courseStructure)})
+```
+
+```{r}
+# 前置作業，接for iteration
+output <- vector("list", length=4)#容器設定
+for(.x in 1:4){
+  get_courses(academicYears[[.x]], 
+                allGrades[[.x]], 
+                courseStructure) -> output[[.x]]
+}
+output
+```
+
+```{r}
+map(1:10,
+    ~toast_withEggHam(toast=toast[[.x]], egg=eggs[[.x]], ham=ham[[.x]]))
+```
+
+```{r}
+output <- vector("character", 10)
+for(i in 1:10){
+  toast_withEggHam(toast=toast[[i]], egg=eggs[[i]], ham=ham[[i]]) -> output[[i]]
+}
+output
+```
+
+```{r}
+a <- sample(1:100, 10, replace=T)
+print(a)
+
+sum <- 0
+for(.x in 1:10){
+  sum <- sum+a[[.x]]
+  print(sum)
+}
+
+```
+
+```{r}
+output <- c() #先設定空向量
+for(.x in 1:10){
+  new <- sample(0:100,1)
+  if(new %% 3==0 & new !=0){
+    output <- c(output, new)
+  }
+}
+
+print(output)
+```
+
+```{r}
+list(
+  list("student A", c(2,3,4,5)),
+  list("student B", NA), # 沒交作業
+  list("student C", factor(c(2,3,4,5))),
+  list("student D", factor(c(2,3,5)))
+) -> collectionHWs
+
+correctAns <- factor(c(2,3,4,5))
+
+output <- vector("integer",length(collectionHWs))
+nameVector <- vector("character", length(collectionHWs))
+for(.x in seq_along(collectionHWs)){
+  nameVector[[.x]] <- collectionHWs[[.x]][[1]]
+  studentAns <- collectionHWs[[.x]][[2]] 
+  if(is.na(studentAns)){
+    output[[.x]] <- 0
+    next
+  } 
+  
+  # 改題部份
+  if(identical(studentAns, correctAns)){
+    output[[.x]] <- 10
+  } else if (class(studentAns)!=class(correctAns) && identical(as.character(studentAns),as.character(correctAns))) {
+    output[[.x]] <- 5
+  } else {
+    output[[.x]] <- 0
+  }
+}
+names(output) <- nameVector
+
+print(output)
+```
+
+```{r}
+seq_along(collectionHWs)
+```
+
+```{r}
+sum <- 0
+for(i in 1:10){
+  newToss <- sample(c("正","反"), 1, replace=T)
+  if(newToss == "正"){
+    sum <- sum+1
+  }
+  print(glue::glue("已擲{i}次得到{sum}次正面"))
+}
+```
+
+# if 寫法 <- break (跳出迴圈的條件)
+# while 寫法 <- 留在迴圈的條件
+
+由於while並沒有迴圈執行次數上限，若沒設好結束條件程式會一直跑下去鎖死電腦。為避免此問題，一般我們會放計數器，並在條件裡放計數上限，如下方四個#註明位置：
+
+```{r}
+count <- 0 # 計數器開始值
+max_count <- 500 # 計數上限
+while(continueCondition && count <= max_count){ # 增加計數上限條件
+  count <- count+1 # 計數器加1
+  body
+}
+```
+
+```{r}
+set.seed(1000) # 控制sample抽出的數字sequence固定，通常進行方法比對用
+
+count <- 0 # 計數器起始值
+output <- c()
+while(count <= 10){ # 計數上限條件
+  count <- count+1 # 計數器+1
+  new <- sample(0:100,1)
+  if(new %% 3==0){
+    output <- c(output, new)
+  }
+}
+
+print(output)
+```
+
+幾乎每一個iteration都可以用functional(map), for, while寫一次，but …
+
+“…the real downside of for loops is that they’re very flexible: a loop conveys that you’re iterating, but not what should be done with the results. Just as it’s better to use while than repeat, and it’s better to use for than while (Section 5.3.2), it’s better to use a functional than for. Each functional is tailored for a specific task, so when you recognise the functional you immediately know why it’s being used.” – from Advanced R.
+
+不過若沒有追求時間效率的需求，還是以符合直覺的寫法優先，日後維護也比較能進入狀況
+
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
